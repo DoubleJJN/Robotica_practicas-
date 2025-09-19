@@ -1,0 +1,102 @@
+#VRML_SIM R2020b utf8
+WorldInfo {
+  coordinateSystem "NUE"
+}
+Viewpoint {
+  orientation -0.5335205829574153 0.8154179766996787 0.22460924031700494 0.8915276654457753
+  position 4.385413486184265 3.7811625115665928 5.147829840470644
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+WoodenBox {
+  translation -1.4 0.25 0.83
+  size 0.5 0.5 0.5
+  mass 50
+}
+WoodenBox {
+  translation -0.75 0.25 -1.41
+  name "wooden box(2)"
+  size 0.5 0.5 0.5
+  mass 50
+}
+WoodenBox {
+  translation 1.03 0.25 0
+  rotation 1 0 0 -1.5707953071795862
+  name "wooden box(1)"
+  size 0.5 0.5 0.5
+  mass 50
+}
+Pioneer2 {
+  controller "Pioneer2GoForward"
+}
+Floor {
+  size 5 5
+}
+Solid {
+  translation 0 0.25 -2.5
+  children [
+    Shape {
+      appearance PBRAppearance {
+      }
+      geometry Box {
+        size 5 0.5 0.1
+      }
+    }
+  ]
+  name "WALL 1"
+  boundingObject Box {
+    size 5 0.5 0.1
+  }
+}
+Solid {
+  translation 0 0.25 2.5
+  children [
+    Shape {
+      appearance PBRAppearance {
+      }
+      geometry Box {
+        size 5 0.5 0.1
+      }
+    }
+  ]
+  name "WALL 2"
+  boundingObject Box {
+    size 5 0.5 0.1
+  }
+}
+Solid {
+  translation 2.46 0.25 -0.01
+  rotation 0 1 0 1.5708
+  children [
+    Shape {
+      appearance PBRAppearance {
+      }
+      geometry Box {
+        size 5 0.5 0.1
+      }
+    }
+  ]
+  name "WALL 3"
+  boundingObject Box {
+    size 5 0.5 0.1
+  }
+}
+Solid {
+  translation -2.44 0.25 -0.00998188
+  rotation 0 1 0 1.5708
+  children [
+    Shape {
+      appearance PBRAppearance {
+      }
+      geometry Box {
+        size 5 0.5 0.1
+      }
+    }
+  ]
+  name "WALL 4"
+  boundingObject Box {
+    size 5 0.5 0.1
+  }
+}
