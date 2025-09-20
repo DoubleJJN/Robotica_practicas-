@@ -49,47 +49,123 @@ MyRobot::~MyRobot()
 void MyRobot::run()
 {
     double compass_angle;
-    double umbral=10;//hay que imprimir valor de sensores para poder ajustarla//ejemplo
+    double umbral = 500;
     
     while (step(_time_step) != -1) {
         // read the sensors
-        const double *compass_val s= _my_compass->getValues();
-        double front_ir = 0.0, innerLeft_ir = 0.0, innerRight_ir =0.0, outerLeft_ir = 0.0,outerRight_ir = 0.0;
+        const double *compass_val = _my_compass->getValues();
+        double front_ir = 0.0, innerLeft_ir = 0.0,
+                innerRight_ir =0.0, outerLeft_ir = 0.0, outerRight_ir = 0.0;
         
-        front_ir = 0.5*(_distance_sensor[0]->getValue()+_distance_sensor[1]->getValue());
-        /*innerLeft_ir = _distance_sensor[2]->getValue();
+        front_ir = 0.5 * (_distance_sensor[0]->getValue() + _distance_sensor[1]->getValue());
+        innerLeft_ir = _distance_sensor[2]->getValue();
         innerRight_ir = _distance_sensor[3]->getValue();
         outerLeft_ir = _distance_sensor[4]->getValue();
-        outerRight_ir = _distance_sensor[5]->getValue();*/
+        outerRight_ir = _distance_sensor[5]->getValue();
+
+        // print sensors info
+        cout << "Sensor front: " << front_ir <<endl;
+        cout << "Sensor innerLeft: " << innerLeft_ir <<endl;
+        cout << "Sensor innerRight: " << innerRight_ir <<endl;
+        cout << "Sensor outerLeft: " << outerLeft_ir <<endl;
+        cout << "Sensor outerRight: " << outerRight_ir <<endl;
+
         // convert compass bearing vector to angle, in degrees
         compass_angle = convert_bearing_to_degrees(compass_val);
 
         // print sensor values to console
         cout << "Compass angle (degrees): " << compass_angle << endl;
 
-        if(front_ir>=umbral){//ejemplo
-          _left_speed = MAX_SPEED;
-          _right_speed = MAX_SPEED - 3;
-        }
-        // simple bang-bang control
-        /*if (compass_angle < (DESIRED_ANGLE - 2)) {
-            // turn right
+        // control del robot
+        bool wallFront = (front_ir > umbral);
+        bool wallLeft = (outerLeft_ir > umbral);
+
+        // si hay pared izq pero no delante -> sigue recto
+        if (wallLeft && !wallFront) {
             _left_speed = MAX_SPEED;
-            _right_speed = MAX_SPEED - 3;
+            _right_speed = MAX_SPEED;
+        // si hay pared izq y delante -> gira derecha
+        } else if (wallLeft && wallFront) {
+            _left_speed = MAX_SPEED;
+            _right_speed = MAX_SPEED - 7;
+        // si no hay ni pared izq ni delante -> gira izq un rato y después sigue recto
+        } else if (!wallLeft && !wallFront) {
+            _left_speed = MAX_SPEED - 7;
+            _right_speed = MAX_SPEED;
+        // si no hay pared izq pero sí delante -> gira derecha
+        } else if (!wallLeft && wallFront) {
+            _left_speed = MAX_SPEED;
+            _right_speed = MAX_SPEED - 7;
         }
-        else {
-            if (compass_angle > (DESIRED_ANGLE + 2)) {
-                // turn left
-                _left_speed = MAX_SPEED - 3;
-                _right_speed = MAX_SPEED;
-            }
-            else {
-                // move straight forward
-                cout<<"Moving forward"<<endl;
-                _left_speed = MAX_SPEED;
-                _right_speed = MAX_SPEED;
-            }
-        }*/
+    
+
+
+
+
+
+        // pared delante -> girar der
+        // if (front_ir > umbral) {
+        //     // pared der -> girar izq
+        //     if (innerRight_ir > umbral) {
+        //         _left_speed = MAX_SPEED - 5;
+        //         _right_speed = MAX_SPEED;
+        //     }
+        //     _left_speed = MAX_SPEED;
+        //     _right_speed = MAX_SPEED - 5;
+        // }
+        // // si no hay pared delante -> recto
+        // else {
+        //     // si hay pared izq -> recto
+        //     if (outerLeft_ir > 800) {
+        //         _left_speed = MAX_SPEED;
+        //         _right_speed = MAX_SPEED;
+        //     }
+        //     else {
+        //         _left_speed = MAX_SPEED;
+        //         _right_speed = MAX_SPEED;
+        //     }
+            
+            
+            // // y si no hay nada, seguimos la brújula
+            // else {
+            //     if (compass_angle < (DESIRED_ANGLE - 2)) {
+            //         _left_speed = MAX_SPEED;
+            //         _right_speed = MAX_SPEED - 3;
+            //     }
+            //     else if (compass_angle > (DESIRED_ANGLE + 2)) {
+            //         _left_speed = MAX_SPEED - 3;
+            //         _right_speed = MAX_SPEED;
+            //     }
+            //     else {
+            //         cout<<"Moving forward"<<endl;
+            //         _left_speed = MAX_SPEED;
+            //         _right_speed = MAX_SPEED;
+            //     }
+            // }
+            
+        //}
+
+
+        // simple bang-bang control
+        // if (compass_angle < (DESIRED_ANGLE - 2)) {
+        //     // turn right
+        //     _left_speed = MAX_SPEED;
+        //     _right_speed = MAX_SPEED - 3;
+        // }
+        // else {
+        //     if (compass_angle > (DESIRED_ANGLE + 2)) {
+        //         // turn left
+        //         _left_speed = MAX_SPEED - 3;
+        //         _right_speed = MAX_SPEED;
+        //     }
+        //     else {
+        //         // move straight forward
+        //         cout<<"Moving forward"<<endl;
+        //         _left_speed = MAX_SPEED;
+        //         _right_speed = MAX_SPEED;
+        //     }
+        // }
+
         // set the motor position to non-stop moving
         _left_wheel_motor->setPosition(INFINITY);
         _right_wheel_motor->setPosition(INFINITY);

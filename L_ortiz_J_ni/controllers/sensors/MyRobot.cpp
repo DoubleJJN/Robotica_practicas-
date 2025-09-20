@@ -53,12 +53,21 @@ void MyRobot::run()
     while (step(_time_step) != -1) {
         // read the sensors
         const double *compass_val = _my_compass->getValues();
-        double front_ir = 0.0, innerLeft_ir = 0.0, innerRight_ir =0.0, outerLeft_ir = 0.0,outerRight_ir = 0.0;
-        front_ir = 0.5*(_distance_sensor[0]->getValue()+_distance_sensor[1]->getValue());
+        double front_ir = 0.0, innerLeft_ir = 0.0,
+                innerRight_ir =0.0, outerLeft_ir = 0.0, outerRight_ir = 0.0;
+        front_ir = 0.5*(_distance_sensor[0]->getValue() + _distance_sensor[1]->getValue());
         innerLeft_ir = _distance_sensor[2]->getValue();
         innerRight_ir = _distance_sensor[3]->getValue();
         outerLeft_ir = _distance_sensor[4]->getValue();
         outerRight_ir = _distance_sensor[5]->getValue();
+
+        // print sensors info
+        cout << "Sensor front: " << front_ir <<endl;
+        cout << "Sensor innerLeft: " << innerLeft_ir <<endl;
+        cout << "Sensor innerRight: " << innerRight_ir <<endl;
+        cout << "Sensor outerLeft: " << outerLeft_ir <<endl;
+        cout << "Sensor outerRight: " << outerRight_ir <<endl;
+
         // convert compass bearing vector to angle, in degrees
         compass_angle = convert_bearing_to_degrees(compass_val);
 

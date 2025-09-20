@@ -3,8 +3,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation 0.005058577664711219 -0.9555255006007932 -0.2948651021969427 3.000524376300484
-  position -1.3828916567043188 4.62180529619873 -6.587998963911007
+  orientation -0.07265029465455862 -0.9552673765535636 -0.2866813108297747 2.4833218981804475
+  position -4.315706127623813 4.461462289496641 -5.186362559539274
 }
 TexturedBackground {
 }
@@ -17,7 +17,7 @@ RectangleArena {
   wallHeight 0.5
 }
 Robot {
-  translation 0.438282 0 0.101128
+  translation 1.82388 0 0.362824
   rotation 0 1 0 4.5257017578052094
   children [
     Group {
@@ -132,7 +132,7 @@ Robot {
       ]
       endPoint Solid {
         translation 0.1603 0.0825 0
-        rotation 1 0 0 2.274565445390163
+        rotation 1 0 0 2.2745654453901634
         children [
           USE WHEEL
         ]
@@ -478,5 +478,37 @@ Robot {
       }
     ]
   }
-  controller "sensors"
+  controller "wall_follower"
+}
+Solid {
+  translation -1 0.25 1.42
+  children [
+    Shape {
+      appearance PBRAppearance {
+      }
+      geometry Box {
+        size 0.1 0.5 2
+      }
+    }
+  ]
+  boundingObject Box {
+    size 0.1 0.5 2
+  }
+}
+Solid {
+  translation 1.55973 0.25 -1.33589
+  rotation 0 1 0 1.8326
+  children [
+    Shape {
+      appearance PBRAppearance {
+      }
+      geometry Box {
+        size 0.1 0.5 2
+      }
+    }
+  ]
+  name "solid(1)"
+  boundingObject Box {
+    size 0.1 0.5 2
+  }
 }
