@@ -21,7 +21,7 @@ using namespace std;
 using namespace webots;
 
 #define MAX_SPEED       10
-#define DESIRED_ANGLE   190
+#define DESIRED_ANGLE   270
 
         
 class MyRobot : public Robot {

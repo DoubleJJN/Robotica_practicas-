@@ -49,7 +49,7 @@ MyRobot::~MyRobot()
 void MyRobot::run()
 {
     double compass_angle;
-    double umbral = 500;
+    double umbral = 400;
     
     while (step(_time_step) != -1) {
         // read the sensors
@@ -97,75 +97,7 @@ void MyRobot::run()
             _left_speed = MAX_SPEED;
             _right_speed = MAX_SPEED - 7;
         }
-    
-
-
-
-
-
-        // pared delante -> girar der
-        // if (front_ir > umbral) {
-        //     // pared der -> girar izq
-        //     if (innerRight_ir > umbral) {
-        //         _left_speed = MAX_SPEED - 5;
-        //         _right_speed = MAX_SPEED;
-        //     }
-        //     _left_speed = MAX_SPEED;
-        //     _right_speed = MAX_SPEED - 5;
-        // }
-        // // si no hay pared delante -> recto
-        // else {
-        //     // si hay pared izq -> recto
-        //     if (outerLeft_ir > 800) {
-        //         _left_speed = MAX_SPEED;
-        //         _right_speed = MAX_SPEED;
-        //     }
-        //     else {
-        //         _left_speed = MAX_SPEED;
-        //         _right_speed = MAX_SPEED;
-        //     }
-            
-            
-            // // y si no hay nada, seguimos la brújula
-            // else {
-            //     if (compass_angle < (DESIRED_ANGLE - 2)) {
-            //         _left_speed = MAX_SPEED;
-            //         _right_speed = MAX_SPEED - 3;
-            //     }
-            //     else if (compass_angle > (DESIRED_ANGLE + 2)) {
-            //         _left_speed = MAX_SPEED - 3;
-            //         _right_speed = MAX_SPEED;
-            //     }
-            //     else {
-            //         cout<<"Moving forward"<<endl;
-            //         _left_speed = MAX_SPEED;
-            //         _right_speed = MAX_SPEED;
-            //     }
-            // }
-            
-        //}
-
-
-        // simple bang-bang control
-        // if (compass_angle < (DESIRED_ANGLE - 2)) {
-        //     // turn right
-        //     _left_speed = MAX_SPEED;
-        //     _right_speed = MAX_SPEED - 3;
-        // }
-        // else {
-        //     if (compass_angle > (DESIRED_ANGLE + 2)) {
-        //         // turn left
-        //         _left_speed = MAX_SPEED - 3;
-        //         _right_speed = MAX_SPEED;
-        //     }
-        //     else {
-        //         // move straight forward
-        //         cout<<"Moving forward"<<endl;
-        //         _left_speed = MAX_SPEED;
-        //         _right_speed = MAX_SPEED;
-        //     }
-        // }
-
+        
         // set the motor position to non-stop moving
         _left_wheel_motor->setPosition(INFINITY);
         _right_wheel_motor->setPosition(INFINITY);
