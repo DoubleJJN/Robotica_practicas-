@@ -81,13 +81,13 @@ void MyRobot::run()
             }
             else 
             {
-              _mode = FORWARD;
+              _mode = FOLLOW_COMPASS;
               cout << "Moving forward." << endl; 
             }
 
             // send actuators commands according to the mode
             switch (_mode){
-              case FORWARD:
+              case FOLLOW_COMPASS:
                 // simple bang-bang control
                 if (compass_angle < (DESIRED_ANGLE - 2)) {
                     // turn right
@@ -111,6 +111,18 @@ void MyRobot::run()
               case OBSTACLE_AVOID:
                 left_speed = -MAX_SPEED / 6.0;
                 right_speed = -MAX_SPEED / 40.0; 
+                break;
+              case TURN_LEFT:
+                left_speed = MAX_SPEED;
+                right_speed = MAX_SPEED - 7;
+                break;
+              case TURN_RIGHT:
+                left_speed = MAX_SPEED - 7;
+                right_speed = MAX_SPEED;
+                break;
+              case FORWARD:
+                left_speed = MAX_SPEED;
+                right_speed = MAX_SPEED;
                 break;
             default:
                 break;
