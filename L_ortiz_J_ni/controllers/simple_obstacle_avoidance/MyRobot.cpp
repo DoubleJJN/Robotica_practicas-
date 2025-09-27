@@ -17,6 +17,8 @@ MyRobot::MyRobot() : Robot()
     
     ds_name[0] = "ds1";
     ds_name[1] = "ds14";
+    ds_name[2] = "ds3"; //outer_left_ir
+    ds_name[3] = "ds12"; //outer_right_ir
     
     _my_compass = getCompass("compass");
     _my_compass->enable(_time_step);
@@ -58,12 +60,15 @@ MyRobot::~MyRobot()
 void MyRobot::run()
 {
     double compass_angle;
-    double ir1_val = 0.0, ir14_val = 0.0; // initialize distance sensor values
+    double ir1_val = 0.0, ir14_val = 0.0,
+           ir3_val = 0.0, ir12_val = 0.0; // initialize distance sensor values
     
     // Main loop
     while (step(_time_step) != -1) {
             ir1_val = _distance_sensor[0]->getValue();
             ir14_val = _distance_sensor[1]->getValue();
+            ir3_val = _distance_sensor[2]->getValue();
+            ir12_val = _distance_sensor[3]->getValue();
             
             const double *compass_val = _my_compass->getValues();
 
@@ -73,17 +78,28 @@ void MyRobot::run()
             // print sensor values to console
             cout << "Compass angle (degrees): " << compass_angle << endl;
             
+            // print sensors info
+            cout << "Sensor frontLeft: " << ir1_val <<endl;
+            cout << "Sensor frontRight: " << ir14_val <<endl;
+            cout << "Sensor outerLeft: " << ir3_val <<endl;
+            cout << "Sensor outerRight: " << ir12_val <<endl;
+
             // control logic of the robot
-            if ((ir1_val > DISTANCE_LIMIT) || (ir14_val > DISTANCE_LIMIT)) 
-            {
+            bool wallFront = (ir1_val > DISTANCE_LIMIT || ir14_val > DISTANCE_LIMIT);
+            bool wallLeft = (ir3_val > DISTANCE_LIMIT);
+            bool wallRight = (ir12_val > DISTANCE_LIMIT);
+    
+            if (wallFront) {
               _mode = OBSTACLE_AVOID;
-              cout << "Backing up and turning left." << endl;
-            }
-            else 
-            {
+              cout <<"Backing up and turning left." << endl;
+            } else if (wallLeft || wallRight) {
+              _mode = FORWARD;
+            } else if (wallLeft && wallFront) 
+            } else {
               _mode = FOLLOW_COMPASS;
-              cout << "Moving forward." << endl; 
+              cout <<"Go forward." << endl;
             }
+
 
             // send actuators commands according to the mode
             switch (_mode){
@@ -92,12 +108,12 @@ void MyRobot::run()
                 if (compass_angle < (DESIRED_ANGLE - 2)) {
                     // turn right
                     left_speed = MAX_SPEED;
-                    right_speed = MAX_SPEED - 3;
+                    right_speed = MAX_SPEED - 5;
                 }
                 else {
                     if (compass_angle > (DESIRED_ANGLE + 2)) {
                         // turn left
-                        left_speed = MAX_SPEED - 3;
+                        left_speed = MAX_SPEED - 5;
                         right_speed = MAX_SPEED;
                     }
                     else {
@@ -109,16 +125,16 @@ void MyRobot::run()
                 }
                 break;
               case OBSTACLE_AVOID:
-                left_speed = -MAX_SPEED / 6.0;
-                right_speed = -MAX_SPEED / 40.0; 
+                left_speed = -MAX_SPEED / 40.0;
+                right_speed = -MAX_SPEED / 6.0; 
                 break;
               case TURN_LEFT:
-                left_speed = MAX_SPEED;
-                right_speed = MAX_SPEED - 7;
+                left_speed = MAX_SPEED - 5;
+                right_speed = MAX_SPEED;
                 break;
               case TURN_RIGHT:
-                left_speed = MAX_SPEED - 7;
-                right_speed = MAX_SPEED;
+                left_speed = MAX_SPEED;
+                right_speed = MAX_SPEED - 5;
                 break;
               case FORWARD:
                 left_speed = MAX_SPEED;

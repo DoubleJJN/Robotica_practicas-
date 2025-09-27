@@ -23,8 +23,8 @@ using namespace std;
 using namespace webots;
 
 
-#define NUM_DISTANCE_SENSOR 2 
-#define DISTANCE_LIMIT 200
+#define NUM_DISTANCE_SENSOR 4
+#define DISTANCE_LIMIT 300
 #define DESIRED_ANGLE   250
 #define MAX_SPEED 10
         
@@ -58,7 +58,8 @@ class MyRobot : public Robot {
             FORWARD,
             TURN_LEFT,
             TURN_RIGHT,
-            OBSTACLE_AVOID
+            OBSTACLE_AVOID,
+            FOLLOW_COMPASS
         } _mode;
         
         // The time step

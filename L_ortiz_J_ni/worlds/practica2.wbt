@@ -3,8 +3,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation -0.0759483444156471 -0.974052165927407 -0.2131999695887626 2.220262238146504
-  position -3.0198072526255717 2.1875038570451935 -2.538665596492556
+  orientation -0.07346091821201234 -0.9743020763350357 -0.21292946612595906 2.2397457948135324
+  position -2.989914084168376 2.2497502859355962 -2.5523044964049064
 }
 TexturedBackground {
 }
@@ -17,8 +17,8 @@ RectangleArena {
   wallHeight 0.5
 }
 Robot {
-  translation 1.93004 0.04 0.358274
-  rotation 0 1 0 -1.4956853071795866
+  translation 1.29934 0.04 0.0547529
+  rotation 0 1 0 2.6931
   children [
     Group {
       children [
@@ -92,8 +92,8 @@ Robot {
         }
       ]
       endPoint Solid {
-        translation -0.1603 0.0825 0
-        rotation 1 0 0 0.07562180103085944
+        translation -0.16029999999999983 0.0825 0
+        rotation 1 0 0 0.07562180103085357
         children [
           DEF WHEEL Transform {
             rotation 0 0 1 1.57
@@ -478,7 +478,7 @@ Robot {
       }
     ]
   }
-  controller "wall_follower"
+  controller "Pioneer2GoForward"
 }
 Solid {
   translation -1 0.25 1.42
