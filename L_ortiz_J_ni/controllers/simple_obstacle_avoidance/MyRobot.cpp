@@ -60,11 +60,15 @@ MyRobot::~MyRobot()
 void MyRobot::run()
 {
     double compass_angle;
-    double ir1_val = 0.0, ir14_val = 0.0,
-           ir3_val = 0.0, ir12_val = 0.0; // initialize distance sensor values
+    double ir1_val, ir14_val,
+           ir3_val, ir12_val;// initialize distance sensor values
     
     // Main loop
     while (step(_time_step) != -1) {
+            ir1_val = 0.0; 
+            ir14_val = 0.0; 
+            ir12_val = 0.0; 
+            ir3_val = 0.0; 
             ir1_val = _distance_sensor[0]->getValue();
             ir14_val = _distance_sensor[1]->getValue();
             ir3_val = _distance_sensor[2]->getValue();
@@ -85,16 +89,53 @@ void MyRobot::run()
             cout << "Sensor outerRight: " << ir12_val <<endl;
 
             // control logic of the robot
-            bool wallFront = (ir1_val > DISTANCE_LIMIT || ir14_val > DISTANCE_LIMIT);
+            bool wallFrontLeft = (ir1_val > DISTANCE_LIMIT);
+            bool wallFrontRight = (ir14_val > DISTANCE_LIMIT);
             bool wallLeft = (ir3_val > DISTANCE_LIMIT);
             bool wallRight = (ir12_val > DISTANCE_LIMIT);
+            bool wallFront = (ir1_val > DISTANCE_LIMIT && ir14_val > DISTANCE_LIMIT);
     
-            if (wallFront) {
-              _mode = OBSTACLE_AVOID;
-              cout <<"Backing up and turning left." << endl;
+            if (wallFrontLeft && !wallFrontRight) {
+              _mode = TURN_RIGHT;
+              cout <<"Pared delantera izq pero NO delantera der -> GIRO DER." << endl;
+            }else if (!wallFrontLeft && wallFrontRight){
+              _mode = TURN_LEFT;
+              cout <<"Pared delantera der pero NO delantera izq -> GIRO IZQ." << endl;
+              //cout <<"Backing up and turning left." << endl;
+            } else if(wallFront){
+               if (wallLeft && !wallRight) {
+        // pared delante e izquierda → gira a la derecha
+                  _mode = TURN_RIGHT;
+                  cout << "TURN RIGHT." << endl;
+                }
+                else if (wallRight && !wallLeft) {
+                    // pared delante y derecha → gira a la izquierda
+                    _mode = TURN_LEFT;
+                    cout << "TURN LEFT." << endl;
+                }
+                else if (wallRight && wallLeft) {
+                    // paredes delante, izquierda y derecha → retrocede recto
+                    _mode = OBSTACLE_AVOID;
+                    cout << "Backing up, im stuck." << endl;
+                }
+                else if (!wallRight && !wallLeft){
+                    // solo pared delante → preferencia: gira izquierda
+                    _mode = TURN_LEFT;
+                    cout << "TURN LEFT (default)." << endl;
+                }
+              }
+              else if (!wallFront && !wallLeft && !wallRight){
+                _mode = FOLLOW_COMPASS;
+                cout <<"Go follow compass." << endl;
             } else if (wallLeft || wallRight) {
               _mode = FORWARD;
-            } else if (wallLeft && wallFront) 
+              cout <<"Yendo recto" << endl;
+            } else if (wallLeft && wallFront){ 
+              _mode = TURN_RIGHT;
+              cout <<"TURN RIGHT." << endl;
+             }else if (wallRight && wallFront){ 
+              _mode = TURN_LEFT;
+              cout <<"TURN LEFT." << endl;
             } else {
               _mode = FOLLOW_COMPASS;
               cout <<"Go forward." << endl;
@@ -110,23 +151,21 @@ void MyRobot::run()
                     left_speed = MAX_SPEED;
                     right_speed = MAX_SPEED - 5;
                 }
-                else {
-                    if (compass_angle > (DESIRED_ANGLE + 2)) {
+                else if (compass_angle > (DESIRED_ANGLE + 2)) {
                         // turn left
-                        left_speed = MAX_SPEED - 5;
-                        right_speed = MAX_SPEED;
-                    }
-                    else {
-                        // move straight forward
-                        cout<<"Moving forward"<<endl;
                         left_speed = MAX_SPEED;
                         right_speed = MAX_SPEED;
-                    }
+                }
+                else {
+                    // move straight forward
+                    cout<<"Moving forward"<<endl;
+                    left_speed = MAX_SPEED;
+                    right_speed = MAX_SPEED;
                 }
                 break;
               case OBSTACLE_AVOID:
-                left_speed = -MAX_SPEED / 40.0;
-                right_speed = -MAX_SPEED / 6.0; 
+                left_speed = (-MAX_SPEED +2);
+                right_speed = (-MAX_SPEED +2); 
                 break;
               case TURN_LEFT:
                 left_speed = MAX_SPEED - 5;
@@ -147,13 +186,10 @@ void MyRobot::run()
             // set motor velocities
             left_motor->setVelocity(left_speed);
             right_motor->setVelocity(right_speed);
-
-        
-        
     }
-
 }
-  //////
+
+////////
   
   double MyRobot::convert_bearing_to_degrees(const double* in_vector)
 {
@@ -166,5 +202,3 @@ void MyRobot::run()
         
     return deg;
 }
-
-//////

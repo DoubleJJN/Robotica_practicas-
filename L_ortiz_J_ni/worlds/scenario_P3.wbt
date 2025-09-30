@@ -9,8 +9,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation 0.5762127963781675 0.5771953170272429 0.5786401120661034 4.184921583340244
-  position 0.028613788093448334 17.948062547321932 -4.522575230859944
+  orientation 0.5479242343833646 0.6252255590697079 0.555762569503718 4.246385833810307
+  position -1.6466864536710886 12.381767976993748 -5.802530263838204
   followType "Mounted Shot"
 }
 Background {
@@ -904,7 +904,7 @@ DEF Goal_Line Solid {
   name "Goal_Line"
 }
 Pioneer2_Robot {
-  translation 0 0 -9.27
+  translation -9.81894e-07 0 -8.9
   rotation 0 1 0 3.14159
   controller "simple_obstacle_avoidance"
   extensionSlot [

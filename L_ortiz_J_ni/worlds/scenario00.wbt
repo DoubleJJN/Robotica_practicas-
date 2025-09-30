@@ -1,0 +1,442 @@
+#VRML_SIM R2020b utf8
+WorldInfo {
+  info [
+    "The model of the Pioneer 2 robot"
+    "Author: Simon Blanchoud"
+    "Date: 02 SEP 2006"
+  ]
+  title "Pioneer 2"
+  coordinateSystem "NUE"
+}
+Viewpoint {
+  orientation -1 1.6599409236339265e-14 1.5002193248034676e-14 1.4907963267949065
+  position 0.0643000057130167 16.17026001151557 -4.423488672451629
+}
+Background {
+  skyColor [
+    0.4 0.7 1
+  ]
+}
+PointLight {
+  attenuation 0 0 12.56
+  intensity 50
+  location 3 6 5
+  radius 1000
+}
+PointLight {
+  attenuation 0 0 12.56
+  intensity 50
+  location -3 6 5
+  radius 1000
+}
+PointLight {
+  attenuation 0 0 12.56
+  intensity 50
+  location -3 6 -5
+  radius 1000
+}
+PointLight {
+  attenuation 0 0 12.56
+  intensity 50
+  location 3 6 -5
+  radius 1000
+}
+PointLight {
+  attenuation 0 0 12.56
+  intensity 50
+  location 3 6 -10
+  radius 1000
+}
+PointLight {
+  attenuation 0 0 12.56
+  intensity 50
+  location -3 6 -10
+  radius 1000
+}
+PointLight {
+  attenuation 0 0 12.56
+  intensity 50
+  location -3 6 10
+  radius 1000
+}
+PointLight {
+  attenuation 0 0 12.56
+  intensity 50
+  location 3 6 10
+  radius 1000
+}
+PointLight {
+  attenuation 0 0 12.56
+  intensity 50
+  location 6 6 10
+  radius 1000
+}
+PointLight {
+  attenuation 0 0 12.56
+  intensity 50
+  location 6 6 5
+  radius 1000
+}
+PointLight {
+  attenuation 0 0 12.56
+  intensity 50
+  location 6 6 0
+  radius 1000
+}
+PointLight {
+  attenuation 0 0 12.56
+  intensity 50
+  location 6 6 -5
+  radius 1000
+}
+PointLight {
+  attenuation 0 0 12.56
+  intensity 50
+  location 6 6 -10
+  radius 1000
+}
+PointLight {
+  attenuation 0 0 12.56
+  intensity 50
+  location -6 6 -10
+  radius 1000
+}
+PointLight {
+  attenuation 0 0 12.56
+  intensity 0.3
+  location -6 6 -5
+  radius 1000
+}
+PointLight {
+  attenuation 0 0 12.56
+  intensity 50
+  location -6 6 0
+  radius 1000
+}
+PointLight {
+  attenuation 0 0 12.56
+  intensity 50
+  location -6 6 5
+  radius 1000
+}
+PointLight {
+  attenuation 0 0 12.56
+  intensity 50
+  location -6 6 10
+  radius 1000
+}
+Solid {
+  translation 4.9 1 0
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.4 1 1
+        }
+      }
+      geometry Box {
+        size 0.2 2 20
+      }
+    }
+  ]
+  name "Left_wall"
+  boundingObject Box {
+    size 0.2 2 20
+  }
+  locked TRUE
+}
+Solid {
+  translation -4.9 1 0
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.4 1 1
+        }
+      }
+      geometry Box {
+        size 0.2 2 20
+      }
+    }
+  ]
+  name "Right_wall"
+  boundingObject Box {
+    size 0.2 2 20
+  }
+  locked TRUE
+}
+Solid {
+  translation 0 1 -9.9
+  rotation 0 1 0 1.5708003061004252
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.4 1 1
+        }
+      }
+      geometry Box {
+        size 0.2 2 10
+      }
+    }
+  ]
+  name "Lower_wall"
+  boundingObject Box {
+    size 0.2 2 10
+  }
+  locked TRUE
+}
+DEF STARTLINE Solid {
+  translation 0 0.00125 -8
+  rotation 0 1 0 1.5708
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 1 0
+          specularColor 1 1 0
+        }
+      }
+      geometry Box {
+        size 0.05 0.0025 10
+      }
+    }
+  ]
+  name "line_0"
+  boundingObject Box {
+    size 1e-06 1e-06 1e-06
+  }
+  locked TRUE
+}
+DEF LINE_M6 Solid {
+  translation 0 0.00125 -6
+  rotation 0 1 0 1.5708003061004252
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 1 0
+          specularColor 1 1 0
+        }
+      }
+      geometry Box {
+        size 0.05 0.0025 10
+      }
+    }
+  ]
+  name "line_1"
+  boundingObject Box {
+    size 1e-06 1e-06 1e-06
+  }
+  locked TRUE
+}
+DEF LINE_M4 Solid {
+  translation 0 0.00125 -4
+  rotation 0 1 0 1.5708
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 1 0
+          specularColor 1 1 0
+        }
+      }
+      geometry Box {
+        size 0.05 0.0025 10
+      }
+    }
+  ]
+  name "line_2"
+  boundingObject Box {
+    size 1e-06 1e-06 1e-06
+  }
+  locked TRUE
+}
+DEF LINE_M2 Solid {
+  translation 0 0.00125 -2
+  rotation 0 1 0 1.5708003061004252
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 1 0
+          specularColor 1 1 0
+        }
+      }
+      geometry Box {
+        size 0.05 0.0025 10
+      }
+    }
+  ]
+  name "line_3"
+  boundingObject Box {
+    size 1e-06 1e-06 1e-06
+  }
+  locked TRUE
+}
+DEF LINE_0 Solid {
+  translation 0 0.00125 0
+  rotation 0 1 0 1.5708
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 1 0
+          specularColor 1 1 0
+        }
+      }
+      geometry Box {
+        size 0.05 0.0025 10
+      }
+    }
+  ]
+  name "line_4"
+  boundingObject Box {
+    size 1e-06 1e-06 1e-06
+  }
+  locked TRUE
+}
+DEF LINE_P2 Solid {
+  translation 0 0.00125 2
+  rotation 0 1 0 1.5708
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 1 0
+          specularColor 1 1 0
+        }
+      }
+      geometry Box {
+        size 0.05 0.0025 10
+      }
+    }
+  ]
+  name "line_5"
+  boundingObject Box {
+    size 1e-06 1e-06 1e-06
+  }
+  locked TRUE
+}
+DEF LINE_P4 Solid {
+  translation 0 0.00125 4
+  rotation 0 1 0 1.5708
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 1 0
+          specularColor 1 1 0
+        }
+      }
+      geometry Box {
+        size 0.05 0.0025 10
+      }
+    }
+  ]
+  name "line_6"
+  boundingObject Box {
+    size 1e-06 1e-06 1e-06
+  }
+  locked TRUE
+}
+DEF LINE_P6 Solid {
+  translation 0 0.00125 6
+  rotation 0 1 0 1.5708
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 1 0
+          specularColor 1 1 0
+        }
+      }
+      geometry Box {
+        size 0.05 0.0025 10
+      }
+    }
+  ]
+  name "line_7"
+  boundingObject Box {
+    size 1e-06 1e-06 1e-06
+  }
+  locked TRUE
+}
+DEF FINISHLINE Solid {
+  translation 0 0.00125 8
+  rotation 0 1 0 1.5708003061004252
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 1 0
+          specularColor 1 1 0
+        }
+      }
+      geometry Box {
+        size 0.05 0.0025 10
+      }
+    }
+  ]
+  name "line_8"
+  boundingObject Box {
+    size 1e-06 1e-06 1e-06
+  }
+  locked TRUE
+}
+Solid {
+  translation 0 1 9.9
+  rotation 0 1 0 1.5708003061004252
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.4 1 1
+        }
+      }
+      geometry Box {
+        size 0.2 2 10
+      }
+    }
+  ]
+  name "upper_wall"
+  boundingObject Box {
+    size 0.2 2 10
+  }
+  locked TRUE
+}
+DEF FLOOR Solid {
+  translation 0 -0.05 0
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          ambientIntensity 1
+          diffuseColor 0.5 0.6 1
+        }
+      }
+      geometry Box {
+        size 10 0.1 20
+      }
+    }
+  ]
+  name "Floor"
+  boundingObject Box {
+    size 10 0.1 20
+  }
+  locked TRUE
+}
+Pole {
+  translation -3 0 3
+}
+Pioneer2 {
+  translation 0.010154054461432123 0 -8.569397030663884
+  rotation 0 1 0 -3.282829121710594
+  controller "straight_odometry"
+  extensionSlot [
+    Compass {
+    }
+    GPS {
+    }
+  ]
+}

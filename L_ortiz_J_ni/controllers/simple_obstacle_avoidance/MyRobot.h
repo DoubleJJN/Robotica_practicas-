@@ -24,9 +24,9 @@ using namespace webots;
 
 
 #define NUM_DISTANCE_SENSOR 4
-#define DISTANCE_LIMIT 300
-#define DESIRED_ANGLE   250
-#define MAX_SPEED 10
+#define DISTANCE_LIMIT 250
+#define DESIRED_ANGLE 290
+#define MAX_SPEED 7
         
 class MyRobot : public Robot {
     public:
@@ -47,7 +47,6 @@ class MyRobot : public Robot {
          */
          
          double convert_bearing_to_degrees(const double* in_vector);
-         
          void run();
 
 
