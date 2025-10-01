@@ -17,14 +17,17 @@
 #include <webots/Robot.hpp>
 #include <webots/Motor.hpp>
 #include <webots/DistanceSensor.hpp>
+#include <webots/Compass.hpp>
 
 using namespace std;
 using namespace webots;
 
 
-#define NUM_DISTANCE_SENSOR 2 
-#define DISTANCE_LIMIT 200 
-#define MAX_SPEED 10
+#define NUM_DISTANCE_SENSOR 6
+#define DISTANCE_LIMIT 200
+#define DESIRED_ANGLE   250
+#define MAX_SPEED 7
+
         
 class MyRobot : public Robot {
     public:
@@ -43,17 +46,20 @@ class MyRobot : public Robot {
          * @param
          * @return
          */
-        void run();
+         
+         double convert_bearing_to_degrees(const double* in_vector);
+         
+         void run();
 
 
     private:
         // working modes
         enum  Mode {
-            STOP,
             FORWARD,
             TURN_LEFT,
             TURN_RIGHT,
-            OBSTACLE_AVOID
+            OBSTACLE_AVOID,
+            FOLLOW_COMPASS
         } _mode;
         
         // The time step
@@ -66,8 +72,10 @@ class MyRobot : public Robot {
         Motor *left_motor;
         Motor *right_motor;
 
-    	DistanceSensor* _distance_sensor[NUM_DISTANCE_SENSOR];
-       const char *ds_name[NUM_DISTANCE_SENSOR];
+        DistanceSensor* _distance_sensor[NUM_DISTANCE_SENSOR];
+        const char *ds_name[NUM_DISTANCE_SENSOR];
+        
+        Compass *_my_compass;
 
         
 };

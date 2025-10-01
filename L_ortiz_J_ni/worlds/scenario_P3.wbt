@@ -10,7 +10,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation 0.5479242343833646 0.6252255590697079 0.555762569503718 4.246385833810307
-  position -1.6466864536710886 12.381767976993748 -5.802530263838204
+  position -2.1200550708829953 22.225870701084446 -2.5219244626415094
   followType "Mounted Shot"
 }
 Background {
@@ -252,7 +252,7 @@ Solid {
     Shape {
       appearance Appearance {
         material Material {
-          diffuseColor 0 1 0
+          diffuseColor 1 0 0
         }
       }
       geometry Cylinder {
@@ -273,7 +273,7 @@ Solid {
     Shape {
       appearance Appearance {
         material Material {
-          diffuseColor 0 1 0
+          diffuseColor 1 0 0
         }
       }
       geometry Cylinder {
@@ -756,7 +756,7 @@ DEF PERSON1 Solid {
     Shape {
       appearance Appearance {
         material Material {
-          diffuseColor 0.160784 1 0.054902
+          diffuseColor 1 0 0.054902
         }
       }
       geometry Cylinder {
@@ -779,7 +779,7 @@ DEF PERSON2 Solid {
     Shape {
       appearance Appearance {
         material Material {
-          diffuseColor 0.160784 1 0.054902
+          diffuseColor 1 0 0.054902
         }
       }
       geometry Cylinder {
