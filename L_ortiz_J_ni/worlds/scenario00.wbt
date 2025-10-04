@@ -432,7 +432,7 @@ Pole {
 Pioneer2 {
   translation 0.010154054461432123 0 -8.569397030663884
   rotation 0 1 0 -3.282829121710594
-  controller "straight_odometry"
+  controller "complete_odometry"
   extensionSlot [
     Compass {
     }
