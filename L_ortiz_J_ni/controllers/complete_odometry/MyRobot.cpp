@@ -24,7 +24,7 @@ MyRobot::MyRobot() : Robot()
     _x = _y = _theta = 0.0; // robot pose variables 
     _sr = _sl = 0.0; // displacement right and left wheels
 
-    _x_goal = 8, _y_goal = 0;
+    _x_goal = 3, _y_goal = -3;
     _theta_goal = atan2((_y_goal - _y),(_x_goal- _x)); // target pose 
 
     // Motor Position Sensor initialization
@@ -88,7 +88,6 @@ void MyRobot::run()
         _theta = 0.0;
     }
     
-    
     cout << "Goal --> x: " << _x_goal << endl;
     cout << "Goal --> y: " << _y_goal << endl;
     cout << "Goal --> Theta: " << _theta_goal << endl;
@@ -100,33 +99,61 @@ void MyRobot::run()
     _left_wheel_motor->setVelocity(_left_speed);
     _right_wheel_motor->setVelocity(_right_speed);
 
-
-    while (step(_time_step) != -1) 
-    {
-        
-        this->compute_odometry(); 
-        this->print_odometry();
-        if(this->goal_reached()) break;
-
+    while (step(_time_step) != -1) {
+      this->compute_odometry();
+      this->print_odometry();
+  
+      // Recalcular ángulo hacia el objetivo
+      _theta_goal = atan2((_y_goal - _y), (_x_goal - _x));
+  
+      // Error de orientación
+      float error_theta = _theta_goal - _theta;
+  
+      // Normalizar error al rango [-pi, pi]
+      error_theta = fmod(error_theta + M_PI, 2.0*M_PI) - M_PI;
+  
+      if (fabs(error_theta) > 0.1) {
+          // Gira en el sitio
+          if (error_theta > 0) {
+              _left_speed = -0.3 * MAX_SPEED;
+              _right_speed = 0.3 * MAX_SPEED;
+          } else {
+              _left_speed = 0.3 * MAX_SPEED;
+              _right_speed = -0.3 * MAX_SPEED;
+          }
+      } else {
+          // Orientado correctamente → avanzar
+          _left_speed = MAX_SPEED * 0.6;
+          _right_speed = MAX_SPEED * 0.6;
+      }
+  
+      _left_wheel_motor->setVelocity(_left_speed);
+      _right_wheel_motor->setVelocity(_right_speed);
+  
+      // Comprobar si ha llegado
+      if(this->goal_reached()) {
+          cout << "Goal reached!" << endl;
+          break;
+      }
     }
+
 }
 
 //////////////////////////////////////////////
 void MyRobot::compute_odometry()
 {
-  // 1. Calcular el desplazamiento lineal (sr y sl almacenan la posición total, no el delta)
+  // 1. Calcular el desplazamiento lineal
   float current_sr = WHEEL_RADIUS * _right_wheel_sensor->getValue();
   float current_sl = WHEEL_RADIUS * _left_wheel_sensor->getValue();
   
-  float delta_sr = current_sr - _sr; // Delta_sr
-  float delta_sl = current_sl - _sl; // Delta_sl
+  float delta_sr = current_sr - _sr;
+  float delta_sl = current_sl - _sl;
   
   // 2. Calcular los componentes de la ecuación
   float delta_s_media = (delta_sr + delta_sl) / 2.0;
-  float delta_theta = (delta_sr - delta_sl) / WHEELS_DISTANCE; // Calculo de Delta_theta
+  float delta_theta = (delta_sr - delta_sl) / WHEELS_DISTANCE;
 
   // 3. Aplicar las actualizaciones de odometría
-  // Ángulo usado para el cálculo de X e Y: theta_intermedio = theta_actual + Delta_theta/2
   float theta_intermedio = _theta + (delta_theta / 2.0); 
 
   _x = _x + (delta_s_media * cos(theta_intermedio));
@@ -135,8 +162,7 @@ void MyRobot::compute_odometry()
   // 4. Actualizar la orientación final
   _theta = _theta + delta_theta;
   
-  // 5. Normalizar theta (CRUCIAL para navegación a largo plazo)
-  // M_PI debe estar disponible con #include <math.h> (ya incluido en MyRobot.h)
+  // 5. Normalizar theta
   _theta = fmod(_theta + M_PI, 2.0 * M_PI) - M_PI; 
 
   // 6. Actualizar las posiciones acumuladas para el siguiente paso
@@ -165,14 +191,12 @@ void MyRobot::print_odometry()
 
 bool MyRobot::goal_reached()
 {
-  float x_target = 8.0; 
-  float tolerance = 0.1; // Se detiene cuando x está entre 7.9 y 8.1 metros
+    float tolerance = 0.1; 
+    float dx = _x_goal - _x;
+    float dy = _y_goal - _y;
+    float dist = sqrt(dx*dx + dy*dy);
+
+    return (dist < tolerance);
   
-  // Condición de parada: Si la posición actual en X es mayor o igual al objetivo
-  if (_x >= (x_target - tolerance)) {
-      return true;
-  }
-  
-  return false;
 }
 //////////////////////////////////////////////
