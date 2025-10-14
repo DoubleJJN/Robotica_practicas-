@@ -9,8 +9,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation -0.559749847596962 0.7722891291832358 0.30041572705265834 1.4262668803811511
-  position 4.214762022164777 4.8069765179402015 -8.033721642626817
+  orientation -0.380952816806708 0.8609096580366896 0.33720841043216154 1.796595124830691
+  position 8.336318345818748 8.489643315625143 -5.305989276254252
 }
 Background {
   skyColor [
@@ -455,6 +455,7 @@ DEF FLOOR Solid {
 Pioneer2 {
   translation 0 0 -9.03
   rotation 0 1 0 3.141592653589793
+  controller "better_obstacle_odometry"
   extensionSlot [
     Compass {
     }

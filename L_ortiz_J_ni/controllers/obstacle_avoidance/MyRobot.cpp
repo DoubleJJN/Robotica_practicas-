@@ -30,9 +30,9 @@ MyRobot::MyRobot() : Robot()
 
     //initialize distance sensors
     for (int ind = 0; ind < NUM_DISTANCE_SENSOR; ind++){
-	cout << "Initializing distance sensor: " <<  ds_name[ind] << std::endl;
-	_distance_sensor[ind] = getDistanceSensor(ds_name[ind]);
-	_distance_sensor[ind]->enable(_time_step);  
+	  cout << "Initializing distance sensor: " <<  ds_name[ind] << std::endl;
+	  _distance_sensor[ind] = getDistanceSensor(ds_name[ind]);
+	  _distance_sensor[ind]->enable(_time_step);  
     }   
     // get motors
     left_motor = getMotor("left wheel motor");
