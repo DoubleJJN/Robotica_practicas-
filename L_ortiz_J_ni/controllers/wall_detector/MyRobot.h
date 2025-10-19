@@ -21,7 +21,10 @@ using namespace webots;
 
 // color que queremos detectar (el 255 es demasiado (blanco), nos interesa la intensidad)
 // con el 100 nos vale porque no es un blanco perfecto el de la pared
-#define THRESHOLD 100
+#define THRESHOLD 80
+#define MAX_SPEED 8.0
+#define MEDIUM_SPEED 3.0
+#define MIN_SPEED 1.0
 
 class MyRobot : public Robot {
     public:
@@ -60,4 +63,3 @@ class MyRobot : public Robot {
 };
 
 #endif
-
