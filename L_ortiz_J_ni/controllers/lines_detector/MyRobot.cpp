@@ -26,7 +26,6 @@ MyRobot::MyRobot() : Robot()
     _spherical_camera = getCamera("camera_s");
     _spherical_camera->enable(_time_step);
 
-
     // Motor initialization
     _left_wheel_motor = getMotor("left wheel motor");
     _right_wheel_motor = getMotor("right wheel motor");
@@ -53,7 +52,13 @@ MyRobot::~MyRobot()
 
 void MyRobot::run()
 {
-    int sum_left = 0, sum_right = 0, sum_front = 0; //contador
+    // color amarillo
+    int limite_canal_R = 180;
+    int limite_canal_G = 180;
+    int limite_canal_B = 100;
+
+    int sum_left = 0, sum_right = 0, sum_front = 0; //contadores
+    int lines_cont = 0; //contador lineas amarillas
     unsigned char green = 0, red = 0, blue = 0; //variables de la intensidad de cada canal
     double percentage_white_left = 0.0;
     double percentage_white_right = 0.0;
@@ -95,6 +100,23 @@ void MyRobot::run()
             }
         }
 
+        // bucle detección de lineas amarillas en cámara esférica
+        for (int x = 0; x < image_width_s; x++) {
+            for (int y = 0; y < image_height_s; y++) {
+                red = _spherical_camera->imageGetRed(image_f, image_width_s, x, y);
+                green = _spherical_camera->imageGetGreen(image_f, image_width_s, x, y);
+                blue = _spherical_camera->imageGetBlue(image_f, image_width_s, x, y);
+
+                // acción si detectamos el color amarillo en la parte inferior de la cámara esférica
+                if ((red > limite_canal_R) && (green > limite_canal_G) && (blue < limite_canal_B)) {
+                    if (y < image_height_s * 0.5) {
+                        cout << "Color amarillo detectado en cámara esférica (parte inferior)" << endl;
+                        lines_cont++;
+                    }
+                }
+            }
+        }
+
         percentage_white_left = (sum_left / (float)(limit_left_f * image_height_f)) * 100;
         percentage_white_right = (sum_right / (float)((image_width_f - limit_right_f) * image_height_f)) * 100;
         percentage_white_front = (sum_front / (float)((limit_right_f - limit_left_f) * image_height_f)) * 100;
@@ -103,45 +125,54 @@ void MyRobot::run()
             << "Front:" << percentage_white_front 
             << "Right:" << percentage_white_right << endl;
 
+        cout << "Líneas amarillas detectadas: " << lines_cont << endl;
+
         // detección de paredes
         bool wallLeft = (percentage_white_left > 15);
         bool wallFront = (percentage_white_front > 25);
         bool wallRight = (percentage_white_right > 15);
-
-        // comportamiento de navegación
         float aux = percentage_white_left - percentage_white_right;
-        if (wallFront) {
-            if (fabs(aux) <= 5) {
-                _left_speed = -MEDIUM_SPEED;
-                _right_speed = MEDIUM_SPEED;
-            } else {
-            if (aux < 0) {
-                _left_speed = MIN_SPEED;
-                _right_speed = MEDIUM_SPEED;
-                cout << "Pared delante -> giro izq" << endl;
-            } else {
+
+        // detección de líneas amarillas
+        if (lines_cont == 2) {
+            _left_speed = 0;
+            _right_speed = 0;
+            cout << "Línea amarilla final detectada -> me detengo" << endl;
+        }
+        else {
+            // comportamiento de navegación
+            if (wallFront) {
+                if (fabs(aux) <= 5) {
+                    _left_speed = -MEDIUM_SPEED;
+                    _right_speed = MEDIUM_SPEED;
+                } else {
+                    if (aux < 0) {
+                        _left_speed = MIN_SPEED;
+                        _right_speed = MEDIUM_SPEED;
+                        cout << "Pared delante -> giro izq" << endl;
+                    } else {
+                        _left_speed = MEDIUM_SPEED;
+                        _right_speed = MIN_SPEED;
+                        cout << "Pared delante -> giro der" << endl;
+                    }
+                }
+            } else if (wallLeft) {
                 _left_speed = MEDIUM_SPEED;
                 _right_speed = MIN_SPEED;
-                cout << "Pared delante -> giro der" << endl;
+                cout << "Pared izquierda -> me alejo (derecha)" << endl;
+            } else if (wallRight) {
+                _left_speed = MIN_SPEED;
+                _right_speed = MEDIUM_SPEED;
+                cout << "Pared derecha -> me alejo (izquierda)" << endl;
+            } else {
+                _left_speed = MEDIUM_SPEED;
+                _right_speed = MEDIUM_SPEED;
+                cout << "Camino libre -> avanzo" << endl;
             }
-            }
-        } else if (wallLeft) {
-            _left_speed = MEDIUM_SPEED;
-            _right_speed = MIN_SPEED;
-            cout << "Pared izquierda -> me alejo (derecha)" << endl;
-        } else if (wallRight) {
-            _left_speed = MIN_SPEED;
-            _right_speed = MEDIUM_SPEED;
-            cout << "Pared derecha -> me alejo (izquierda)" << endl;
-        } else {
-            _left_speed = MEDIUM_SPEED;
-            _right_speed = MEDIUM_SPEED;
-            cout << "Camino libre -> avanzo" << endl;
         }
         // asignamos velocidades a los motores
         _left_wheel_motor->setVelocity(_left_speed);
         _right_wheel_motor->setVelocity(_right_speed);
     }
 }
-
 //////////////////////////////////////////////
