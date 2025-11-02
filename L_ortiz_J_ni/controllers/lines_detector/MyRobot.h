@@ -60,6 +60,10 @@ class MyRobot : public Robot {
         Motor* _left_wheel_motor;
         Motor* _right_wheel_motor;
 
+        // Counter for yellow line detection
+        int _lines_cont;
+        bool _line_detected;
+
 };
 
 #endif

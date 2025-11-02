@@ -19,6 +19,10 @@ MyRobot::MyRobot() : Robot()
     _left_speed = 0;
     _right_speed = 0;
 
+    // initialize line counter
+    _lines_cont = 0;
+    _line_detected = false;
+
     // get cameras and enable them
     // las dos camaras son de 128x128 pixeles
     _forward_camera = getCamera("camera_f");
@@ -57,12 +61,15 @@ void MyRobot::run()
     int limite_canal_G = 180;
     int limite_canal_B = 100;
 
-    int sum_left = 0, sum_right = 0, sum_front = 0; //contadores
-    int lines_cont = 0; //contador lineas amarillas
-    unsigned char green = 0, red = 0, blue = 0; //variables de la intensidad de cada canal
+    int sum_left = 0, sum_right = 0, sum_front = 0; // Contadores
+    unsigned char green = 0, red = 0, blue = 0; // Variables de la intensidad de cada canal
     double percentage_white_left = 0.0;
     double percentage_white_right = 0.0;
     double percentage_white_front = 0.0;
+
+    int yellow_pixels_cont = 0; // Contador de píxeles amarillos en la franja
+    double percentage_yellow = 0.0;
+    const double YELLOW_THRESHOLD = 5.0; // Umbral de porcentaje
 
     // get size of images for forward camera
     int image_width_f = _forward_camera->getWidth();
@@ -78,11 +85,18 @@ void MyRobot::run()
     int image_height_s = _spherical_camera->getHeight();
     cout << "Size of spherical camera image: " << image_width_s << ", " << image_height_s << endl;
 
+    // Definimos los límites de la franja horizontal para detección de amarillo
+    int y_start_limit = (int)(image_height_s * 0.5);   // El 50%
+    int y_end_limit = (int)(image_height_s * 0.6); // El 60%
+    int stripe_area = image_width_s * (y_end_limit - y_start_limit); // Área total de la franja
+
     while (step(_time_step) != -1) {
         sum_left = sum_right = sum_front = 0;
+        yellow_pixels_cont = 0;
         const unsigned char *image_f = _forward_camera->getImage();
+        const unsigned char *image_s = _spherical_camera->getImage();
 
-        // bucle detección de blanco para cada región de la cámara frontal
+        // Bucle detección de blanco para cada región de la cámara frontal
         for (int x = 0; x < image_width_f; x++) {
             for (int y = 0; y < image_height_f; y++) {
                 red = _forward_camera->imageGetRed(image_f, image_width_f, x, y);
@@ -100,47 +114,59 @@ void MyRobot::run()
             }
         }
 
-        // bucle detección de lineas amarillas en cámara esférica
+        // Bucle detección de lineas amarillas en cámara esférica
         for (int x = 0; x < image_width_s; x++) {
-            for (int y = 0; y < image_height_s; y++) {
-                red = _spherical_camera->imageGetRed(image_f, image_width_s, x, y);
-                green = _spherical_camera->imageGetGreen(image_f, image_width_s, x, y);
-                blue = _spherical_camera->imageGetBlue(image_f, image_width_s, x, y);
+            for (int y = y_start_limit; y < y_end_limit; y++) { // Solo en la franja definida
+                
+                red = _spherical_camera->imageGetRed(image_s, image_width_s, x, y); 
+                green = _spherical_camera->imageGetGreen(image_s, image_width_s, x, y);
+                blue = _spherical_camera->imageGetBlue(image_s, image_width_s, x, y);
 
-                // acción si detectamos el color amarillo en la parte inferior de la cámara esférica
                 if ((red > limite_canal_R) && (green > limite_canal_G) && (blue < limite_canal_B)) {
-                    if (y < image_height_s * 0.5) {
-                        cout << "Color amarillo detectado en cámara esférica (parte inferior)" << endl;
-                        lines_cont++;
-                    }
+                    yellow_pixels_cont++;
                 }
             }
         }
 
-        percentage_white_left = (sum_left / (float)(limit_left_f * image_height_f)) * 100;
-        percentage_white_right = (sum_right / (float)((image_width_f - limit_right_f) * image_height_f)) * 100;
-        percentage_white_front = (sum_front / (float)((limit_right_f - limit_left_f) * image_height_f)) * 100;
+        percentage_yellow = (yellow_pixels_cont / (float)stripe_area) * 100;
+        cout << "Porcentaje Amarillo en Franja: " << percentage_yellow << "%" << endl;
 
-        cout << "Left:" << percentage_white_left 
-            << "Front:" << percentage_white_front 
-            << "Right:" << percentage_white_right << endl;
+        // Verificamos si la línea está presente
+        bool yellow_line_present = (percentage_yellow > YELLOW_THRESHOLD);
 
-        cout << "Líneas amarillas detectadas: " << lines_cont << endl;
+        if (yellow_line_present && !_line_detected) {
+            // Se detecta amarillo y no se había detectado previamente -> Nueva línea
+            _lines_cont++;
+            _line_detected = true; 
+            cout << "LÍNEA AMARILLA (NUEVA): Contador = " << _lines_cont << endl;
+        } 
+        else if (!yellow_line_present && _line_detected) {
+            // No se detecta amarillo y el flag estaba activo -> Línea pasada
+            _line_detected = false;
+            cout << "Línea amarilla PASADA. Flag reiniciado." << endl;
+        }
 
-        // detección de paredes
-        bool wallLeft = (percentage_white_left > 15);
-        bool wallFront = (percentage_white_front > 25);
-        bool wallRight = (percentage_white_right > 15);
-        float aux = percentage_white_left - percentage_white_right;
-
-        // detección de líneas amarillas
-        if (lines_cont == 2) {
+        // --- LÓGICA DE NAVEGACIÓN ---
+        if (_lines_cont == 2) {
             _left_speed = 0;
             _right_speed = 0;
             cout << "Línea amarilla final detectada -> me detengo" << endl;
-        }
-        else {
-            // comportamiento de navegación
+        } else {
+            percentage_white_left = (sum_left / (float)(limit_left_f * image_height_f)) * 100;
+            percentage_white_right = (sum_right / (float)((image_width_f - limit_right_f) * image_height_f)) * 100;
+            percentage_white_front = (sum_front / (float)((limit_right_f - limit_left_f) * image_height_f)) * 100;
+
+            cout << "Left:" << percentage_white_left 
+                << "Front:" << percentage_white_front 
+                << "Right:" << percentage_white_right << endl;
+
+            // Detección de paredes
+            bool wallLeft = (percentage_white_left > 15);
+            bool wallFront = (percentage_white_front > 25);
+            bool wallRight = (percentage_white_right > 15);
+            float aux = percentage_white_left - percentage_white_right;
+
+            // Comportamiento de navegación
             if (wallFront) {
                 if (fabs(aux) <= 5) {
                     _left_speed = -MEDIUM_SPEED;
@@ -170,9 +196,10 @@ void MyRobot::run()
                 cout << "Camino libre -> avanzo" << endl;
             }
         }
-        // asignamos velocidades a los motores
+        // Asignamos velocidades a los motores
         _left_wheel_motor->setVelocity(_left_speed);
         _right_wheel_motor->setVelocity(_right_speed);
+        
     }
 }
 //////////////////////////////////////////////
