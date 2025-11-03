@@ -51,9 +51,9 @@ MyRobot::~MyRobot()
     // disable devices --> distance sensor
     for (int ind = 0; ind < NUM_DISTANCE_SENSOR; ind++)
     {
-	cout << "Disabling distance sensor: " <<  ds_name[ind] <<endl;
-	_distance_sensor[ind]->disable();
-    }  
+      cout << "Disabling distance sensor: " <<  ds_name[ind] <<endl;
+      _distance_sensor[ind]->disable();
+    }
     
     _my_compass->disable();
 }
@@ -108,10 +108,10 @@ void MyRobot::run()
             if (wallFrontLeft && !wallFrontRight) {
               _mode = TURN_RIGHT;
               cout <<"TURN RIGHT." << endl;
-            }else if (!wallFrontLeft && wallFrontRight){
+            } else if (!wallFrontLeft && wallFrontRight) {
               _mode = TURN_LEFT;
               cout <<"TURN LEFT." << endl;
-            } else if(wallFront){
+            } else if (wallFront) {
                if (wallLeft && !wallRight) {
                   _mode = TURN_RIGHT;
                   cout << "TURN RIGHT." << endl;
@@ -124,24 +124,24 @@ void MyRobot::run()
                     _mode = OBSTACLE_AVOID;
                     cout << "Backing up." << endl;
                 }
-                else if (!wallRight && !wallLeft){
+                else if (!wallRight && !wallLeft) {
                     _mode = TURN_LEFT;
                     cout << "TURN LEFT (default)." << endl;
                 }
-                else{
+                else {
                   _mode = FOLLOW_COMPASS;
                   cout <<"Go forward." << endl;
                 }
-            }else if (wallLeft || wallRight) {
+            } else if (wallLeft || wallRight) {
               _mode = FORWARD;
-            } else if(wallFrontLeft && wallLeft && !wallFrontRight && !wallRight){
+            } else if (wallFrontLeft && wallLeft && !wallFrontRight && !wallRight) {
               _mode = TURN_RIGHT;
-            }else if(!wallFrontLeft && !wallLeft && wallFrontRight && wallRight){
+            } else if (!wallFrontLeft && !wallLeft && wallFrontRight && wallRight) {
               _mode = TURN_LEFT;
-            }else if (wallLeft && wallFront){ 
+            } else if (wallLeft && wallFront) {
               _mode = TURN_RIGHT;
               cout <<"TURN RIGHT." << endl;
-             }else if (wallRight && wallFront){ 
+            } else if (wallRight && wallFront) {
               _mode = TURN_LEFT;
               cout <<"TURN LEFT." << endl;
             } else {
